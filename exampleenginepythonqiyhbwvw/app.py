@@ -25,6 +25,25 @@ class Main:
         """
         self.__logger = get_user_logger(Main.__qualname__)
 
+
+    def getInput(self, runtimeContext: JavaObject):
+        inputs = {"clients","contracts","products"}
+        parametersInput = {}
+        print("------------------------ Parametros de entrada -----------------------------")
+        try:
+            config = runtimeContext.getConfig()
+            if not config.isEmpty():
+                root_key = "inputs."
+                for names in inputs :
+                    parametersInput.update({names : get_params_from_runtime(runtimeContext, root_key+names)})
+                print(parametersInput)
+        except Exception as e:
+            self.__logger.error(e)
+            return -1
+
+        self.__logger.info(f"parameters: {parametersInput}")
+        return 0
+
     def main(self, runtimeContext: JavaObject) -> int:
         """
         THIS METHOD CANNOT BE REMOVED
@@ -33,12 +52,17 @@ class Main:
         ret_code = 0
         parameters = {}
 
+        config = runtimeContext.getConfig()
+
+        print(config.getString("params.devName"))
+        print(config.getString("params.date"))
+
         # PART 1 - READ FROM CONFIGURATION
         # Reading config file for input and output paths
         try:
             config = runtimeContext.getConfig()
             if not config.isEmpty():
-                root_key = "EnvironmentVarsPM"
+                root_key = "EnvironmentVarPM"
                 parameters = get_params_from_runtime(runtimeContext, root_key)
         except Exception as e:
             self.__logger.error(e)
@@ -63,5 +87,7 @@ class Main:
         except Exception as e:
             ret_code = -1
             self.__logger.error(e)
+
+        self.getInput(runtimeContext)
 
         return ret_code
