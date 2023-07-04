@@ -38,18 +38,8 @@ class TestWorker(TestCase):
         Test worker entrypoint execution with config.
         """
 
-        config = MagicMock()
-        cfg_file = NamedTemporaryFile(prefix="application", suffix=".conf")
-        sys.argv = [__file__, cfg_file.name]
-
-        config.getString = MagicMock(return_value=os.path.realpath(__file__))
-
-        with patch(
-			"exampleenginepythonqiyhbwvw.app.Main.main", return_value=0
-		), patch(
-            "dataproc_sdk.dataproc_sdk_launcher.launcher.SparkLauncher.execute",
-            return_value=0,
-        ):
+        sys.argv = [__file__, "file.conf"]
+        with patch("dataproc_sdk.dataproc_sdk_launcher.launcher.SparkLauncher.execute",return_value=0,):
             ret_code = main()
 
         self.assertEqual(ret_code, 0)

@@ -51,10 +51,15 @@ class Main:
         ret_code = 0
         parameters = {}
 
-        config = runtimeContext.getConfig()
+        try:
+            config = runtimeContext.getConfig()
 
-        print(config.getString("params.devName"))
-        print(config.getString("params.date"))
+            print(config.getString("params.devName"))
+            print(config.getString("params.date"))
+        except Exception as e:
+            self.__logger.error(e)
+            return -1
+
 
         # PART 1 - READ FROM CONFIGURATION
         # Reading config file for input and output paths
@@ -63,7 +68,6 @@ class Main:
             if not config.isEmpty():
                 root_key = "EnvironmentVarPM"
                 parameters = get_params_from_runtime(runtimeContext, root_key)
-                jwk_date = config.getString("params.jwkDate")
         except Exception as e:
             self.__logger.error(e)
             return -1
@@ -81,7 +85,7 @@ class Main:
             else:
                 self.__logger.info("Executing experiment code")
                 entrypoint = DataprocExperiment()
-                entrypoint.run(jwk_date,**parameters)
+                entrypoint.run(**parameters)
                 self.__logger.info("Experiment code executed")
             self.__logger.info("Ended 'run' method")
         except Exception as e:

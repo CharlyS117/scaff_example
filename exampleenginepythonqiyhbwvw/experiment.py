@@ -22,7 +22,7 @@ class DataprocExperiment:
         self.__spark = SparkSession.builder.getOrCreate()
         self.__datio_pyspark_session = DatioPysparkSession().get_or_create()
 
-    def run(self, date: str, **parameters: Dict) -> None:
+    def run(self, **parameters: Dict) -> None:
         """
         Execute the code written by the user.
 
@@ -67,7 +67,7 @@ class DataprocExperiment:
 
 
 
-        phones_df = self.read_parquet("phones",parameters)
+        """phones_df = self.read_parquet("phones",parameters)
         customers_df = self.read_parquet("costumers",parameters)
 
         filter_phones = logic.filter_phones(phones_df)
@@ -77,10 +77,10 @@ class DataprocExperiment:
         vip_df = logic.customer_vip(join_dfs)
         discount = logic.discount(vip_df)
         final_price = logic.final_prices(discount)
-        jwk_date = logic.paste_date(final_price,date)
+        jwk_date = logic.paste_date(final_price,parameters["jwkDate"])
         age = logic.age(jwk_date)
         age.show()
-
+"""
         """self.__datio_pyspark_session.write().mode("overwrite") \
             .option("partitionOverwriteMode", "dynamic") \
             .partition_by(["jwk_date"]) \

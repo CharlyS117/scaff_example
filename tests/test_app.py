@@ -15,7 +15,7 @@ class TestApp(TestCase):
     Test class for Dataproc Pyspark job entrypoint execution
     """
 
-    
+
 
     def test_app_empty_config(self):
         """
@@ -23,23 +23,17 @@ class TestApp(TestCase):
         """
 
         runtimeContext = MagicMock()
-        config = MagicMock()
+        runtimeContext.getConfig.return_value.getObject.side_effect = Exception
+        runtimeContext.getConfig.return_value.getString.return_value = "empty"
         app_main = Main()
 
-        gateway_property = GatewayProperty(auto_field="Mock", pool="Mock")
-        client = GatewayClient(gateway_property=gateway_property)
-        java_object = JavaObject("RunTimeError", client)
-        config.getObject = MagicMock(
-            side_effect=Py4JJavaError("no params", java_object)
-        )
-        config.getString = MagicMock(return_value="empty")
-        runtimeContext.getConfig = MagicMock(return_value=config)
+
 
         if os.path.exists("./exampleenginepythonqiyhbwvw/dataflow.py"):
             with patch("exampleenginepythonqiyhbwvw.app.dataproc_dataflow"):
                 ret_code = app_main.main(runtimeContext)
         else:
-            with patch("exampleenginepythonqiyhbwvw.app.DataprocExperiment"):
+            with patch("exampleenginepythonqiyhbwvw.experiment.DataprocExperiment.run",return_value = None):
                 ret_code = app_main.main(runtimeContext)
 
         self.assertEqual(ret_code, 0)

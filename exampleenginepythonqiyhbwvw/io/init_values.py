@@ -13,18 +13,19 @@ class InitValues:
         clients_df = self.get_input_df(parameters,c.CLIENTS_PATH,c.CLIENTS_SCHEMA)
         contracts_df = self.get_input_df(parameters, c.CONTRACTS_PATH, c.CONTRACTS_SCHEMA)
         products_df = self.get_input_df(parameters, c.PRODUCTS_PATH, c.PRODUCTS_SCHEMA)
-        phones_df = self.get_input_df_parquet(parameters,c.PHONE_PATH,c.PHONE_SCHEMA)
-        costumers_df = self.get_input_df_parquet(parameters,c.COSTUMERS_PATH,c.COSTUMERS_SCHEMA)
+        #phones_df = self.get_input_df_parquet(parameters,c.PHONE_PATH,c.PHONE_SCHEMA)
+        #costumers_df = self.get_input_df_parquet(parameters,c.COSTUMERS_PATH,c.COSTUMERS_SCHEMA)
 
         output_path,output_schema = self.get_config_by_name(parameters,"output","output_schema")
 
-        return phones_df,costumers_df,output_path,output_schema
+        return clients_df,contracts_df,products_df,output_path,output_schema
         """return phones_df, costumers_df,output_path, output_schema"""
 
     def get_config_by_name(self,parameters, key_path, key_schema):
         self.__logger.info("Get config for " + key_path)
         io_path = parameters[key_path]
         io_schema = DatioSchema.getBuilder().fromURI(parameters[key_schema]).build()
+        print("------------------------------------"+str(type(io_schema)))
         return  io_path,io_schema
 
     def get_input_df_parquet(self,parameters,key_path,key_schema):
