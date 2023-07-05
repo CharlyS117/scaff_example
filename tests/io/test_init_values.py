@@ -5,6 +5,7 @@ from dataproc_sdk import DatioSchema
 from pyspark.sql import DataFrame
 
 import exampleenginepythonqiyhbwvw.common.constants as c
+from exampleenginepythonqiyhbwvw.business_logic.business_logic import BusinessLogic
 from exampleenginepythonqiyhbwvw.config import get_params_from_runtime
 from exampleenginepythonqiyhbwvw.io.init_values import InitValues
 
